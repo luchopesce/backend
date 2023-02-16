@@ -10,7 +10,7 @@ class ProductManager {
     async getProducts() {
         try {
             const product = await fs.promises.readFile(this.#path, "utf-8")
-            return [...JSON.parse(product)]
+            return JSON.parse(product)
         }
         catch (err) {
             return []
@@ -76,7 +76,7 @@ async function main() {
     const productos = new ProductManager("./Productos.json")
 
     // await productos.addProduct("Iphone2", "Celular iphone2", 1250, "./img/algo", 22460, 20)
-    await productos.updateProduct(2, "price", 500)
+    await productos.updateProduct(2, 400)
     console.log(await productos.getProducts())
 }
 
