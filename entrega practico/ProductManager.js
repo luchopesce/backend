@@ -1,12 +1,16 @@
 const fs = require("fs")
 
 class ProductManager {
-    #path = "./Productos.json"
+    #path;
+
+    constructor(path) {
+        this.#path = path
+    }
 
     async getProducts() {
         try {
             const product = await fs.promises.readFile(this.#path, "utf-8")
-            return JSON.parse(product)
+            return [...JSON.parse(product)]
         }
         catch (err) {
             return []
@@ -17,12 +21,25 @@ class ProductManager {
     async getProductById(productId) {
         const readProducts = await this.getProducts()
         const productoExist = readProducts.find((product) => product.id === productId)
+
         if (productoExist) {
-            return JSON.stringify(productoExist)
+            return productoExist
         }
         else {
             throw new Error(`El id: ${productId}, no existe`)
         }
+    }
+
+    async updateProduct(productId, item, value) {
+        const productsToUpdate = await this.getProducts()
+        productsToUpdate.map((productUpdate) => {
+            if (productUpdate.id === productId) {
+                if(!productUpdate[item] || value == undefined || null) return
+                productUpdate[item] = value
+            }
+            return productUpdate
+        })
+        await fs.promises.writeFile(this.#path, JSON.stringify(productsToUpdate))
     }
 
     async addProduct(title, description, price, thumbnail, code, stock) {
@@ -34,7 +51,7 @@ class ProductManager {
         }
 
         const checkCode = readProducts.find((product) => product.code === code)
-        if (checkCode){
+        if (checkCode) {
             throw new Error(`El code ${code}, ya existe ingrese otro`)
         }
 
@@ -55,14 +72,12 @@ class ProductManager {
 
 }
 
-async function main (){
-    const productos = new ProductManager()
+async function main() {
+    const productos = new ProductManager("./Productos.json")
 
-    // await productos.addProduct("Iphone", "Celular iphone", 150, "./img/algo", 22400, 20)
-
-    let products = await productos.getProductById(1)
-
-    console.log(products)
+    // await productos.addProduct("Iphone2", "Celular iphone2", 1250, "./img/algo", 22460, 20)
+    await productos.updateProduct(2, "price", 500)
+    console.log(await productos.getProducts())
 }
 
 main()
