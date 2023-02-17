@@ -30,16 +30,26 @@ class ProductManager {
         }
     }
 
-    async updateProduct(productId, item, value) {
+    async updateProduct(productId, item) {
         const productsToUpdate = await this.getProducts()
-        productsToUpdate.map((productUpdate) => {
+        let newProduct = []
+        newProduct = productsToUpdate.map((productUpdate) => {
             if (productUpdate.id === productId) {
-                if(!productUpdate[item] || value == undefined || null) return
-                productUpdate[item] = value
+                productUpdate = { ...productUpdate, ...item, id: productId }
             }
             return productUpdate
         })
-        await fs.promises.writeFile(this.#path, JSON.stringify(productsToUpdate))
+        await fs.promises.writeFile(this.#path, JSON.stringify(newProduct))
+    }
+
+    async deleteProduct(productId){
+        const productsToDelete = await this.getProducts()
+        let newProduct = []
+        newProduct = productsToDelete.filter((product) =>{
+            if(product.id !== productId)
+                return {...product}
+        })
+        await fs.promises.writeFile(this.#path, JSON.stringify(newProduct))
     }
 
     async addProduct(title, description, price, thumbnail, code, stock) {
@@ -74,9 +84,11 @@ class ProductManager {
 
 async function main() {
     const productos = new ProductManager("./Productos.json")
-
     // await productos.addProduct("Iphone2", "Celular iphone2", 1250, "./img/algo", 22460, 20)
-    await productos.updateProduct(2, 400)
+    
+    await productos.updateProduct(4, { "price": 3500, "title": "gfg" })
+    await productos.deleteProduct(1)
+
     console.log(await productos.getProducts())
 }
 
