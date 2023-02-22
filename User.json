@@ -1,0 +1,12 @@
+[
+  {
+    "id": 0,
+    "firstName": "lucho",
+    "lastName": "pesce",
+    "username": "luche96",
+    "password": {
+      "hash": "27c7f396cc2cdc2cf971a32adf1fac7d2195588381b726e2e343b6847d781d66a6a09c03dccda7bead98bc93881f5c706f3d557de9ea78772e1a9fac0aa20063",
+      "salt": "a70bcea18c097e885e533ee5d8ce5fc5"
+    }
+  }
+]

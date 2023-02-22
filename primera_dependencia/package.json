@@ -1,0 +1,14 @@
+{
+  "name": "primera_dependencia",
+  "version": "1.0.0",
+  "description": "asdasd",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lucho",
+  "license": "ISC",
+  "dependencies": {
+    "luxon": "^3.2.1"
+  }
+}

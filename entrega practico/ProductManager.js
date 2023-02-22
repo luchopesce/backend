@@ -32,8 +32,7 @@ class ProductManager {
 
     async updateProduct(productId, item) {
         const productsToUpdate = await this.getProducts()
-        let newProduct = []
-        newProduct = productsToUpdate.map((productUpdate) => {
+        const newProduct = productsToUpdate.map((productUpdate) => {
             if (productUpdate.id === productId) {
                 productUpdate = { ...productUpdate, ...item, id: productId }
             }
@@ -44,8 +43,7 @@ class ProductManager {
 
     async deleteProduct(productId){
         const productsToDelete = await this.getProducts()
-        let newProduct = []
-        newProduct = productsToDelete.filter((product) =>{
+        const newProduct = productsToDelete.filter((product) =>{
             if(product.id !== productId)
                 return {...product}
         })
@@ -86,8 +84,8 @@ async function main() {
     const productos = new ProductManager("./Productos.json")
     // await productos.addProduct("Iphone2", "Celular iphone2", 1250, "./img/algo", 22460, 20)
     
-    await productos.updateProduct(4, { "price": 3500, "title": "gfg" })
-    await productos.deleteProduct(1)
+    await productos.updateProduct(0, { "price": 3500, "title": "gfg"})
+    //await productos.deleteProduct(2)
 
     console.log(await productos.getProducts())
 }
