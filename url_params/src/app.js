@@ -3,13 +3,21 @@ import express from "express"
 const app = express()
 
 const users = [
-    { id: "1", name: "lucho" },
-    { id: "2", name: "matias" },
-    { id: "3", name: "pesce" }
+    { id: "1", name: "lucho", edad: "22" },
+    { id: "2", name: "matias", edad: "27" },
+    { id: "3", name: "pesce", edad: "2" }
 ]
 
-app.get("/users", (req, res) => {
-    res.json(users)
+app.get("/users", async (req, res) => {
+    const { id, edad, name } = req.query
+
+    if (edad) {
+        return res.send(users.filter((u) => u.edad === edad))
+    }
+    else {
+        res.send(users)
+    }
+
 })
 
 app.get("/users/:id", (req, res) => {
