@@ -4,7 +4,7 @@ import ProductManager from "./ProductManager.js"
 const app = express()
 const manager = new ProductManager("../Productos.json")
 
-app.get("/productos", async (req, res) => {
+app.get("/products", async (req, res) => {
     const { limit } = req.query
     const products = await manager.getProducts()
     if (!products) {
@@ -21,7 +21,7 @@ app.get("/productos", async (req, res) => {
     }
 })
 
-app.get("/productos/:pid/", async (req, res) => {
+app.get("/products/:pid/", async (req, res) => {
     const { pid } = req.params
     const product = await manager.getProductById(Number(pid))
     if (!product) {
@@ -32,6 +32,6 @@ app.get("/productos/:pid/", async (req, res) => {
     res.json(product)
 })
 
-app.listen(3000, () => {
-    console.log("Server listening on port 3000")
+app.listen(8080, () => {
+    console.log("Server listening on port 8080")
 })
