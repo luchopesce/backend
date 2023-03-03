@@ -1,0 +1,35 @@
+[
+  {
+    "id": 0,
+    "title": "Samsung S20",
+    "description": "Celular smartphone 20",
+    "code": 5001,
+    "price": 200,
+    "status": true,
+    "stock": 15,
+    "category": "Celular",
+    "thumbnail": []
+  },
+  {
+    "id": 1,
+    "title": "Samsung S20",
+    "description": "Celular smartphone 20",
+    "code": 5002,
+    "price": 200,
+    "status": true,
+    "stock": 15,
+    "category": "Celular",
+    "thumbnail": []
+  },
+  {
+    "id": 2,
+    "title": "Samsung S20",
+    "description": "Celular smartphone 20",
+    "code": 500,
+    "price": 200,
+    "status": true,
+    "stock": 15,
+    "category": "Celular",
+    "thumbnail": []
+  }
+]
