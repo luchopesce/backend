@@ -8,42 +8,31 @@ const managerCart = new CartManager("./cart.json");
 const managerProduct = new ProductManager("./products.json");
 
 cartRouter.post("/:cid/products/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
+  const prodId = Number(req.params.pid);
+  const cartId = Number(req.params.cid);
 
-  //controlo que {pid y cid} sean un numero
-  if (!pid || isNaN(Number(pid)) || !cid || isNaN(Number(cid))) {
+  //controlo que proId y cartId sean un numero
+  if (isNaN(prodId) || isNaN(cartId)) {
     return res.status(400).send({
       error: "Datos invalidos, revise la informacion a cargar",
     });
   }
 
   //controlo que el ID del producto exista
-  const checkExistProduct = await managerProduct.getProductById(Number(pid));
+  const checkExistProduct = await managerProduct.getProductById(prodId);
   if (!checkExistProduct) {
     return res.status(400).send({
-      error: `El Product ID: ${pid} no existe en la lista de productos`,
+      error: `El Product ID: ${prodId} no existe en la lista de productos`,
     });
   }
 
-  const checkExistProdutInCart = await managerCart.getCartById(Number(cid))
-
-  console.log(checkExistProdutInCart)
-
-  if (checkExistProdutInCart) {
-    const updateCart = await managerCart.updateCart(Number(cid), Number(pid));
-    res.send(updateCart)
+  const checkExistCart = await managerCart.getCartById(cartId);
+  if (checkExistCart) {
+    const updateCart = await managerCart.updateCart(cartId, prodId);
+    res.send(updateCart);
   } else {
-    const createCart = await managerCart.addProductToCart(Number(cid), {
-      product: Number(pid),
-      quantity: 1,
-    });
-    if (!createCart) {
-      return res.status(404).send({
-        error: `No se pudo crear el producto, revisar los datos ingresados`,
-      });
-    } else {
-      res.send(createCart);
-    }
+    const createCart = await managerCart.addProductToCart(cartId, prodId);
+    res.send(createCart);
   }
 });
 

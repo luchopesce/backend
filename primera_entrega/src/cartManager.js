@@ -18,22 +18,23 @@ class CartManager {
 
   async getCartById(cartId) {
     const readCart = await this.getCart();
-    const cartExist = readCart.find((cart) => cart.id === cartId);
-    return cartExist;
+    const existCart = readCart.find((cart) => cart.id === cartId);
+    return existCart;
   }
 
-  async addProductToCart(cartId, products = []) {
+  async addProductToCart(cartId, productId) {
     const itemsInCart = await this.getCart();
-
     const newItemInCart = {
       id: cartId,
-      products,
+      products: [
+        {
+          product: productId,
+          quantity: 1,
+        },
+      ],
     };
-
     const newCart = [...itemsInCart, newItemInCart];
-
     await fs.promises.writeFile(this.#path, JSON.stringify(newCart));
-
     return newItemInCart;
   }
 
@@ -41,11 +42,24 @@ class CartManager {
     const cartToUpdate = await this.getCart();
     const newCart = cartToUpdate.map((cartUpdate) => {
       if (cartUpdate.id === cartId) {
-        cartUpdate = {
-          ...cartUpdate,
-          id: cartId,
-          products: { product: productId, quantity: 1 },
-        };
+        const cartProducts = cartUpdate.products;
+        const cartCheckProduct = cartProducts.find(
+          (cart) => cart.product === productId
+        );
+        if (cartCheckProduct) {
+          cartCheckProduct.quantity++;
+          cartUpdate = {
+            ...cartUpdate,
+            id: cartId,
+            products: [...cartProducts],
+          };
+        } else {
+          cartUpdate = {
+            ...cartUpdate,
+            id: cartId,
+            products: [...cartProducts, { product: productId, quantity: 1 }],
+          };
+        }
       }
       return cartUpdate;
     });

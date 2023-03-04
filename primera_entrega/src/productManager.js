@@ -38,19 +38,17 @@ class ProductManager {
   }
 
   async deleteProduct(productId) {
-    const productsToDelete = await this.getProducts();
-    const newProduct = productsToDelete.filter((product) => {
-      if (product.id !== productId) return { ...product };
-    });
-    await fs.promises.writeFile(this.#path, JSON.stringify(newProduct));
-    return newProduct;
+    let productsToDelete = await this.getProducts();
+    productsToDelete = productsToDelete.filter((product) => product.id !== productId);
+    await fs.promises.writeFile(this.#path, JSON.stringify(productsToDelete));
+    return productsToDelete;
   }
 
   async addProduct({
     title,
     description,
     code,
-    price,
+    price, 
     stock,
     category,
     thumbnail = [],
