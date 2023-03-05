@@ -2,7 +2,7 @@ import fs from "fs";
 
 class ProductManager {
   #path;
-  #idNumber = 0
+  #idNumber = 0;
 
   constructor(path) {
     this.#path = path;
@@ -57,13 +57,25 @@ class ProductManager {
     thumbnail = [],
   }) {
     const readProducts = await this.getProducts();
+    const checkCodeExist = readProducts.some(
+      (product) => product.code === code
+    );
+    const checkIdExist = readProducts.some(
+      (products) => products.id === this.#idNumber
+    );
 
-    if (readProducts.find((product) => product.code === code)) {
+    if (checkCodeExist) {
       return;
     }
 
+    if (checkIdExist) {
+      let newId = readProducts.map((c) => c.id);
+      newId = Math.max(...newId);
+      this.#idNumber = newId + 1;
+    }
+
     const newProduct = {
-      id: readProducts.length,
+      id: this.#idNumber,
       title,
       description,
       code,

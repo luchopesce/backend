@@ -78,47 +78,47 @@ productsRouter.post("/", async (req, res) => {
 });
 
 productsRouter.put("/:pid", async (req, res) => {
-  const { pid } = req.params;
+  const prodId = req.params.pid
   const newObj = req.body;
 
   //controlo que {pid} sea un numero y que el objeto "newObj" no este vacio
-  if (!pid || isNaN(Number(pid)) || Object.entries(newObj).length < 1) {
+  if (!pid || isNaN(prodId) || Object.entries(newObj).length < 1) {
     return res.status(400).send({
       error: "Datos invalidos, revise la informacion a cargar",
     });
   }
 
   //controlo que el ID exista
-  const checkExistProduct = await managerProduct.getProductById(Number(pid));
+  const checkExistProduct = await managerProduct.getProductById(prodId);
   if (!checkExistProduct) {
     return res.status(400).send({
       error: `El ID: ${pid} no existe en la lista de productos`,
     });
   }
 
-  const productUpdate = await managerProduct.updateProduct(Number(pid), newObj);
+  const productUpdate = await managerProduct.updateProduct(prodId, newObj);
   res.status(200).send(productUpdate);
 });
 
 productsRouter.delete("/:pid", async (req, res) => {
-  const { pid } = req.params;
+  const prodId = req.params.pid
 
   //controlo que {pid} sea un numero
-  if (!pid || isNaN(Number(pid))) {
+  if (!pid || isNaN(prodId)) {
     return res.status(400).send({
       error: "Datos invalidos, revise la informacion a cargar",
     });
   }
 
   //controlo que el ID exista
-  const checkExistProduct = await managerProduct.getProductById(Number(pid));
+  const checkExistProduct = await managerProduct.getProductById(prodId);
   if (!checkExistProduct) {
     return res.status(400).send({
       error: `El ID: ${pid} no existe en la lista de productos`,
     });
   }
 
-  const productDelete = await managerProduct.deleteProduct(Number(pid));
+  const productDelete = await managerProduct.deleteProduct(prodId);
   res.status(200).send(productDelete);
 });
 
