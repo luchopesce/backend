@@ -1,0 +1,16 @@
+<div>
+  {{#if role}}
+  <ul>
+    {{#each foods}}
+      <div>
+        <li>
+          {{name}}: {{price}}
+        </li>
+      </div>
+    {{/each}}
+  </ul>
+  {{else}}
+  <div>Usuario</div>
+  {{/if}}
+</div>
+<script src="/js/index.js"></script>
