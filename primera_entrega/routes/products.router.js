@@ -78,7 +78,7 @@ productsRouter.post("/", async (req, res) => {
 });
 
 productsRouter.put("/:pid", async (req, res) => {
-  const prodId = req.params.pid
+  const prodId = Number(req.params.pid)
   const newObj = req.body;
 
   //controlo que {pid} sea un numero y que el objeto "newObj" no este vacio
@@ -101,7 +101,7 @@ productsRouter.put("/:pid", async (req, res) => {
 });
 
 productsRouter.delete("/:pid", async (req, res) => {
-  const prodId = req.params.pid
+  const prodId = Number(req.params.pid)
 
   //controlo que {pid} sea un numero
   if (!pid || isNaN(prodId)) {
