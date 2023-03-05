@@ -19,14 +19,24 @@ productsRouter.get("/", async (req, res) => {
 });
 
 productsRouter.get("/:pid/", async (req, res) => {
-  const { pid } = req.params;
-  const product = await managerProduct.getProductById(Number(pid));
+  const prodId = Number(req.params.pid);
+
+  //controlo que proId sea un numero
+  if (isNaN(prodId)) {
+    return res.status(400).send({
+      error: "Datos invalidos, revise la informacion a cargar",
+    });
+  }
+
+  const product = await managerProduct.getProductById(prodId);
   if (!product) {
     return res
       .status(404)
-      .send({ error: `No existe el producto con el ID ${req.params.id}` });
+      .send({ error: `No existe el producto con el ID ${prodId}` });
   }
-  res.json(product);
+  else{
+    res.json(product);
+  }
 });
 
 productsRouter.post("/", async (req, res) => {
@@ -87,7 +97,7 @@ productsRouter.put("/:pid", async (req, res) => {
   }
 
   const productUpdate = await managerProduct.updateProduct(Number(pid), newObj);
-  res.status(200).send(productUpdate)
+  res.status(200).send(productUpdate);
 });
 
 productsRouter.delete("/:pid", async (req, res) => {
@@ -109,7 +119,7 @@ productsRouter.delete("/:pid", async (req, res) => {
   }
 
   const productDelete = await managerProduct.deleteProduct(Number(pid));
-  res.status(200).send(productDelete)
+  res.status(200).send(productDelete);
 });
 
 export default productsRouter;

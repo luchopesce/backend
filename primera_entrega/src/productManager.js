@@ -2,6 +2,7 @@ import fs from "fs";
 
 class ProductManager {
   #path;
+  #idNumber = 0
 
   constructor(path) {
     this.#path = path;
@@ -39,7 +40,9 @@ class ProductManager {
 
   async deleteProduct(productId) {
     let productsToDelete = await this.getProducts();
-    productsToDelete = productsToDelete.filter((product) => product.id !== productId);
+    productsToDelete = productsToDelete.filter(
+      (product) => product.id !== productId
+    );
     await fs.promises.writeFile(this.#path, JSON.stringify(productsToDelete));
     return productsToDelete;
   }
@@ -48,7 +51,7 @@ class ProductManager {
     title,
     description,
     code,
-    price, 
+    price,
     stock,
     category,
     thumbnail = [],

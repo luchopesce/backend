@@ -1,7 +1,8 @@
-import fs from "fs";
+import fs, { read } from "fs";
 
 class CartManager {
   #path;
+  #idNumber = 0
 
   constructor(path) {
     this.#path = path;
@@ -22,50 +23,51 @@ class CartManager {
     return existCart;
   }
 
-  async addProductToCart(cartId, productId) {
-    const itemsInCart = await this.getCart();
-    const newItemInCart = {
-      id: cartId,
-      products: [
-        {
-          product: productId,
-          quantity: 1,
-        },
-      ],
+  async createCart(){
+    const readCart = await this.getCart(); 
+    const checkIdExist = readCart.some((cart) => cart.id === this.#idNumber)  
+    if(checkIdExist){
+      let newId = readCart.map((c) => c.id)
+      newId = Math.max(...newId)
+      this.#idNumber = newId + 1
+    }
+    const createCart = {
+      id: this.#idNumber,
+      products: [],
     };
-    const newCart = [...itemsInCart, newItemInCart];
+    const newCart = [...readCart, createCart];
     await fs.promises.writeFile(this.#path, JSON.stringify(newCart));
-    return newItemInCart;
+    return createCart;
   }
-
-  async updateCart(cartId, productId) {
-    const cartToUpdate = await this.getCart();
-    const newCart = cartToUpdate.map((cartUpdate) => {
-      if (cartUpdate.id === cartId) {
-        const cartProducts = cartUpdate.products;
+  
+  async addProductToCart(cartId, productId) {
+    const readCart = await this.getCart();
+    const addProduct = readCart.map((cart) => {
+      if (cart.id === cartId) {
+        const cartProducts = cart.products;
         const cartCheckProduct = cartProducts.find(
           (cart) => cart.product === productId
         );
         if (cartCheckProduct) {
           cartCheckProduct.quantity++;
-          cartUpdate = {
-            ...cartUpdate,
+          cart = {
+            ...cart,
             id: cartId,
             products: [...cartProducts],
           };
         } else {
-          cartUpdate = {
-            ...cartUpdate,
+          cart = {
+            ...cart,
             id: cartId,
             products: [...cartProducts, { product: productId, quantity: 1 }],
           };
         }
       }
-      return cartUpdate;
+      return cart;
     });
-    await fs.promises.writeFile(this.#path, JSON.stringify(newCart));
-    const newCartUpdate = await this.getCartById(cartId);
-    return newCartUpdate;
+    await fs.promises.writeFile(this.#path, JSON.stringify(addProduct));
+    const getNewCart = await this.getCartById(cartId);
+    return getNewCart;
   }
 }
 
