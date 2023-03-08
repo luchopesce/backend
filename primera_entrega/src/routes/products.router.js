@@ -82,7 +82,7 @@ productsRouter.put("/:pid", async (req, res) => {
   const newObj = req.body;
 
   //controlo que {pid} sea un numero y que el objeto "newObj" no este vacio
-  if (!pid || isNaN(prodId) || Object.entries(newObj).length < 1) {
+  if (isNaN(prodId) || Object.entries(newObj).length < 1) {
     return res.status(400).send({
       error: "Datos invalidos, revise la informacion a cargar",
     });
@@ -104,7 +104,7 @@ productsRouter.delete("/:pid", async (req, res) => {
   const prodId = Number(req.params.pid)
 
   //controlo que {pid} sea un numero
-  if (!pid || isNaN(prodId)) {
+  if (isNaN(prodId)) {
     return res.status(400).send({
       error: "Datos invalidos, revise la informacion a cargar",
     });
