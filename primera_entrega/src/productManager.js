@@ -34,8 +34,7 @@ class ProductManager {
       return productUpdate;
     });
     await fs.promises.writeFile(this.#path, JSON.stringify(newProduct));
-    const newProductUpdate = await this.getProductById(productId);
-    return newProductUpdate;
+    return newProduct;
   }
 
   async deleteProduct(productId) {

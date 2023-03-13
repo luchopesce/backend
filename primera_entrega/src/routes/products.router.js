@@ -77,12 +77,14 @@ productsRouter.post("/", async (req, res) => {
   }
   res.send(newProduct);
 
-  io.emit("new", createProduct);
+  io.emit("list-products", createProduct);
 });
 
 productsRouter.put("/:pid", async (req, res) => {
   const prodId = Number(req.params.pid);
   const newObj = req.body;
+  const { app } = req;
+  const io = app.get("io");
 
   //controlo que {pid} sea un numero y que el objeto "newObj" no este vacio
   if (isNaN(prodId) || Object.entries(newObj).length < 1) {
@@ -101,10 +103,13 @@ productsRouter.put("/:pid", async (req, res) => {
 
   const productUpdate = await managerProduct.updateProduct(prodId, newObj);
   res.status(200).send(productUpdate);
+  io.emit("list-products", productUpdate);
 });
 
 productsRouter.delete("/:pid", async (req, res) => {
   const prodId = Number(req.params.pid);
+  const { app } = req;
+  const io = app.get("io");
 
   //controlo que {pid} sea un numero
   if (isNaN(prodId)) {
@@ -123,6 +128,7 @@ productsRouter.delete("/:pid", async (req, res) => {
 
   const productDelete = await managerProduct.deleteProduct(prodId);
   res.status(200).send(productDelete);
+  io.emit("list-products", productDelete);
 });
 
 export default productsRouter;
