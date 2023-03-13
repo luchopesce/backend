@@ -33,8 +33,7 @@ productsRouter.get("/:pid/", async (req, res) => {
     return res
       .status(404)
       .send({ error: `No existe el producto con el ID ${prodId}` });
-  }
-  else{
+  } else {
     res.json(product);
   }
 });
@@ -42,6 +41,8 @@ productsRouter.get("/:pid/", async (req, res) => {
 productsRouter.post("/", async (req, res) => {
   const { title, description, code, price, stock, category, thumbnail } =
     req.body;
+  const { app } = req;
+  const io = app.get("io");
 
   const newProduct = {
     title,
@@ -75,10 +76,12 @@ productsRouter.post("/", async (req, res) => {
     });
   }
   res.send(newProduct);
+
+  io.emit("new", createProduct);
 });
 
 productsRouter.put("/:pid", async (req, res) => {
-  const prodId = Number(req.params.pid)
+  const prodId = Number(req.params.pid);
   const newObj = req.body;
 
   //controlo que {pid} sea un numero y que el objeto "newObj" no este vacio
@@ -101,7 +104,7 @@ productsRouter.put("/:pid", async (req, res) => {
 });
 
 productsRouter.delete("/:pid", async (req, res) => {
-  const prodId = Number(req.params.pid)
+  const prodId = Number(req.params.pid);
 
   //controlo que {pid} sea un numero
   if (isNaN(prodId)) {

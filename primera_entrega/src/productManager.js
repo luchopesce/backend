@@ -90,7 +90,7 @@ class ProductManager {
 
     await fs.promises.writeFile(this.#path, JSON.stringify(updateProducts));
 
-    return newProduct;
+    return updateProducts;
   }
 }
 
