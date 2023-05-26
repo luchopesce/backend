@@ -10,7 +10,7 @@ class MongooseDB {
   static async getInstance() {
     if (!MongooseDB.#instance) {
       MongooseDB.#instance = new MongooseDB();
-      console.log("Connect to database successfully");
+      console.log("Connect to MongooseDB successfully");
     }
     return MongooseDB.#instance;
   }

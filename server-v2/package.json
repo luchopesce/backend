@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,10 @@
     "express-handlebars": "^7.0.7",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.2.1",
+    "mongoose-paginate-v2": "^1.7.1",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "socket.io": "^4.6.1"
   }
 }

@@ -1,0 +1,18 @@
+<h1>
+    Pagina Perfil
+</h1>
+
+<div>
+<h1>Session iniciada con usuario: {{email}}</h1>
+{{#if first_name}}
+<h2>Nombre: {{first_name}}</h2>
+{{/if}}
+{{#if last_name}}
+<h2>Apellido: {{last_name}}</h2>
+{{/if}}
+<h2>Rol: {{role}}</h2>
+<div>
+    <button id="logout">Logout</button>
+</div>
+
+<script src="/js/index.js"></script>
