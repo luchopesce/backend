@@ -1,7 +1,5 @@
 import productModel from "../models/product.model.js";
 
-let arrOptions = []
-
 export class ProductManager {
   constructor() {
     console.log("Working with products using dbsystem");
@@ -35,7 +33,13 @@ export class ProductManager {
   };
 
   static paginateProducts = async (query, options) => {
-    arrOptions = options
+    if(!options){
+      options = options = {
+        lean: true,
+        limit: 2,
+        sort: { price: "asc" },
+      };
+    }
     const paginate = await productModel.paginate(query, options);
     return paginate;
   };

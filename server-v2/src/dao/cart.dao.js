@@ -6,27 +6,27 @@ export class CartManager {
     console.log("Working with cart using dbsystem");
   }
 
-  getCarts = async () => {
+  static getCarts = async () => {
     const carts = await cartModel.find().lean();
     return carts;
   };
 
-  getCartById = async (id) => {
+  static getCartById = async (id) => {
     const cart = await cartModel.findOne({ _id: id });
     return cart;
   };
 
-  deleteCart = async (id) => {
+  static deleteCart = async (id) => {
     const deleteCart = await cartModel.findByIdAndDelete({ _id: id });
     return deleteCart;
   };
 
-  createCart = async () => {
+  static createCart = async () => {
     const newCart = await cartModel.create({});
     return newCart;
   };
 
-  updateProductQuantity = async (cartId, prodId, reqQuantity) => {
+  static updateProductQuantity = async (cartId, prodId, reqQuantity) => {
     const cart = await this.getCartById(cartId);
     const product = await ProductManager.getProductById(prodId);
     if (cart && product && reqQuantity.hasOwnProperty("quantity")) {
@@ -57,7 +57,7 @@ export class CartManager {
     }
   };
 
-  deleteProductInCart = async (cartId, prodId) => {
+  static deleteProductInCart = async (cartId, prodId) => {
     const cart = await this.getCartById(cartId);
     const product = await ProductManager.getProductById(prodId);
     if (cart && product) {
@@ -81,7 +81,7 @@ export class CartManager {
     }
   };
 
-  addProductToCart = async (cartId, prodId, obj) => {
+  static addProductToCart = async (cartId, prodId, obj) => {
     const cart = await this.getCartById(cartId);
     const product = await ProductManager.getProductById(prodId);
     if (cart && product) {

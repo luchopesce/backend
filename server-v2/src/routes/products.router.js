@@ -1,8 +1,10 @@
 import { Router } from "express";
 import {
-  productController,
-  productIdController,
+  getProductController,
+  getProductIdController,
   createProductController,
+  updateProductController,
+  deleteProductController,
 } from "../controller/products.controller.js";
 import {
   authorizeMiddleware,
@@ -15,14 +17,14 @@ router.get(
   "/",
   authMiddleware("jwt", { session: true }),
   authorizeMiddleware("admin"),
-  productController
+  getProductController
 );
 
 router.get(
   "/:pid/",
   authMiddleware("jwt", { session: true }),
   authorizeMiddleware("admin"),
-  productIdController
+  getProductIdController
 );
 
 router.post(
@@ -30,6 +32,20 @@ router.post(
   authMiddleware("jwt", { session: true }),
   authorizeMiddleware("admin"),
   createProductController
+);
+
+router.put(
+  "/:pid/",
+  authMiddleware("jwt", { session: true }),
+  authorizeMiddleware("admin"),
+  updateProductController
+);
+
+router.delete(
+  "/:pid/",
+  authMiddleware("jwt", { session: true }),
+  authorizeMiddleware("admin"),
+  deleteProductController
 );
 
 export default router;

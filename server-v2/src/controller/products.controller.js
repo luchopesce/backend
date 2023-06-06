@@ -1,9 +1,10 @@
-import { Router, json } from "express";
+import { Router } from "express";
 import { ProductManager } from "../dao/product.dao.js";
+import { io } from "../app.js";
 
 const router = Router();
 
-export const productController = async (req, res) => {
+export const getProductController = async (req, res) => {
   const { limit, page, sort, title, stock } = req.query;
 
   let options = {
@@ -28,7 +29,7 @@ export const productController = async (req, res) => {
   }
 };
 
-export const productIdController = async (req, res) => {
+export const getProductIdController = async (req, res) => {
   const pid = req.params.pid;
   try {
     const result = await ProductManager.getProductById(pid);
@@ -58,7 +59,9 @@ export const createProductController = async (req, res) => {
     !category ||
     !thumbnail
   ) {
-    return res.status(400).json({ status: "error", payload: "Missing parameters" });
+    return res
+      .status(400)
+      .json({ status: "error", payload: "Missing parameters" });
   }
 
   if (products.some((product) => product.code === code)) {
@@ -79,56 +82,59 @@ export const createProductController = async (req, res) => {
     });
 
     if (!result) {
-      return res.status(404).json({ status: "error", payload: "Check paramaters" });
+      return res
+        .status(404)
+        .json({ status: "error", payload: "Check paramaters" });
     } else {
+      const paginate = await ProductManager.paginateProducts();
+      io.emit("list-products", paginate);
       return res.status(201).json({ status: "ok", payload: result });
     }
   }
 };
 
-router.put("/:pid", async (req, res) => {
-  const { app } = req;
+export const updateProductController = async (req, res) => {
   const { pid } = req.params;
   const obj = req.body;
-
   if (Object.entries(obj).length < 1) {
     return res
       .status(400)
-      .send({ status: "error", payload: "Missing parameters" });
+      .json({ status: "error", payload: "Missing parameters" });
   }
 
   try {
     const result = await ProductManager.updateProduct(pid, obj);
     if (!result) {
-      res
+      return res
         .status(400)
-        .send({ status: "error", id: pid, payload: "Product no exists" });
+        .json({ status: "error", id: pid, payload: "Product no exists" });
     } else {
-      res.status(200).send({ status: "ok", payload: result });
-      ProductManager.sendMessage(app);
+      const paginate = await ProductManager.paginateProducts();
+      io.emit("list-products", paginate);
+      return res.status(200).json({ status: "ok", payload: result });
     }
   } catch (err) {
-    res.status(400).send({ status: "error", payload: err.message });
+    res.status(400).json({ status: "error", payload: err.message });
   }
-});
+};
 
-router.delete("/:pid", async (req, res) => {
-  const { app } = req;
+export const deleteProductController = async (req, res) => {
   const pid = req.params.pid;
 
   try {
     const result = await ProductManager.deleteProduct(pid);
     if (!result) {
-      res
+      return res
         .status(400)
-        .send({ status: "error", id: pid, payload: "Product no exists" });
+        .json({ status: "error", id: pid, payload: "Product no exists" });
     } else {
-      res.status(200).send({ status: "ok", payload: result });
-      ProductManager.sendMessage(app);
+      const paginate = await ProductManager.paginateProducts();
+      io.emit("list-products", paginate);
+      return res.status(200).json({ status: "ok", payload: result });
     }
   } catch (err) {
-    res.status(400).send({ status: "error", payload: err.message });
+    return res.status(400).json({ status: "error", payload: err.message });
   }
-});
+};
 
 export default router;
